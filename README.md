@@ -70,7 +70,7 @@ Eventhough you can use this widget anywhere, it's recommended to use RadialMenu 
 You can manually position the widget wherever you wish
 ```dart
    RadialMenu(
-    centerButtonAlignment: Alignment(0.3,0.5) // by default alignment set to Alignment.center
+    centerButtonAlignment: Alignment(0.3,0.5) // by default alignment is set to Alignment.center
    )
 ```
 

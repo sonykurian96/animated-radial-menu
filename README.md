@@ -1,7 +1,5 @@
 # animated_radial_menu
 
-A new Flutter package.
-
 ![example](https://user-images.githubusercontent.com/67534990/124471528-98137680-ddba-11eb-91dc-c5d91053b3ed.gif)
 
 ## Installation

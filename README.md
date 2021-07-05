@@ -7,8 +7,6 @@ The package provides an easy way to work with radial menu along with animations.
 You can check out the example [here](https://github.com/sonykurian96/animated-radial-menu/blob/master/example/lib/main.dart)
 ## Installation
 
-[example](https://github.com/sonykurian96/animated-radial-menu/blob/master/example/lib/main.dart)
-
 To use this package : add the dependency to your pubspec.yaml file
 
 ```yaml

@@ -6,27 +6,37 @@ import 'dart:math';
 import 'package:vector_math/vector_math.dart' show radians;
 
 class RadialMenu extends StatefulWidget {
-
+  // will take in list of buttons
   final List<RadialButton> children;
 
+  // used for positioning the widget
   final AlignmentGeometry centerButtonAlignment;
 
+  // set main button size
   final double centerButtonSize;
 
-  RadialMenu({Key? key,required this.children,this.centerButtonSize=0.5,this.centerButtonAlignment = Alignment.center}):super(key: key);
+  // constructor for main button
+  RadialMenu(
+      {Key? key,
+      required this.children,
+      this.centerButtonSize = 0.5,
+      this.centerButtonAlignment = Alignment.center})
+      : super(key: key);
 
   createState() => _RadialMenuState();
 }
 
-class _RadialMenuState extends State<RadialMenu> with SingleTickerProviderStateMixin {
-
+class _RadialMenuState extends State<RadialMenu>
+    with SingleTickerProviderStateMixin {
+  // used to control animations
   AnimationController? controller;
 
-
+  // controller gets initialized here
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: Duration(milliseconds: 900), vsync: this);
+    controller =
+        AnimationController(duration: Duration(milliseconds: 900), vsync: this);
   }
 
   @override
@@ -36,12 +46,16 @@ class _RadialMenuState extends State<RadialMenu> with SingleTickerProviderStateM
       child: SizedBox(
         width: 250,
         height: 250,
-        child: RadialAnimation(controller: controller!,radialButtons: widget.children,
+        child: RadialAnimation(
+          controller: controller!,
+          radialButtons: widget.children,
           centerSizeOfButton: widget.centerButtonSize,
         ),
       ),
     );
   }
+
+  // controller gets disposed here
   @override
   void dispose() {
     controller!.dispose();
@@ -49,30 +63,31 @@ class _RadialMenuState extends State<RadialMenu> with SingleTickerProviderStateM
   }
 }
 
-
+// Here all the animation will take place
 class RadialAnimation extends StatelessWidget {
-  RadialAnimation({ Key? key, required this.controller, required this.radialButtons,this.centerSizeOfButton=0.5}) :
-
+  RadialAnimation(
+      {Key? key,
+      required this.controller,
+      required this.radialButtons,
+      this.centerSizeOfButton = 0.5})
+      :
+        // translation animation
         translation = Tween<double>(
           begin: 0.0,
           end: 100.0,
         ).animate(
-          CurvedAnimation(
-              parent: controller,
-              curve: Curves.elasticOut
-          ),
+          CurvedAnimation(parent: controller, curve: Curves.elasticOut),
         ),
 
+        // scaling animation
         scale = Tween<double>(
-          begin: centerSizeOfButton*2,
+          begin: centerSizeOfButton * 2,
           end: 0.0,
         ).animate(
-          CurvedAnimation(
-              parent: controller,
-              curve: Curves.fastOutSlowIn
-          ),
+          CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn),
         ),
 
+        // rotation animation
         rotation = Tween<double>(
           begin: 0.0,
           end: 360.0,
@@ -80,12 +95,12 @@ class RadialAnimation extends StatelessWidget {
           CurvedAnimation(
             parent: controller,
             curve: Interval(
-              0.0, 0.7,
+              0.0,
+              0.7,
               curve: Curves.decelerate,
             ),
           ),
         ),
-
         super(key: key);
 
   final AnimationController controller;
@@ -97,7 +112,8 @@ class RadialAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double generatedAngle = 360/(radialButtons.length);
+    // will provide angle for further calculation
+    double generatedAngle = 360 / (radialButtons.length);
     double iconAngle;
 
     return AnimatedBuilder(
@@ -105,59 +121,78 @@ class RadialAnimation extends StatelessWidget {
         builder: (context, widget) {
           return Transform.rotate(
               angle: radians(rotation.value),
-              child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    ...radialButtons.map((index){
-                      iconAngle = radialButtons.indexOf(index)*generatedAngle;
-                      return _buildButton(iconAngle,color: index.buttonColor,icon: index.icon, onPress: index.onPress);
-                    }),
-                    Transform.scale(
-                      scale: scale.value - (centerSizeOfButton*2 - 0.25),
-                      child: FloatingActionButton(
-                          child: Icon(FontAwesomeIcons.timesCircle), onPressed: close, backgroundColor: Colors.red
-                      ),
-                    ),
-                    Transform.scale(
-                      scale: scale.value,
-                      child: FloatingActionButton(child: Icon(FontAwesomeIcons.solidDotCircle), onPressed: open,backgroundColor: Colors.indigo,),
-                    )
-                  ])
-          );
+              child: Stack(alignment: Alignment.center, children: [
+                // generates list of buttons
+                ...radialButtons.map((index) {
+                  iconAngle = radialButtons.indexOf(index) * generatedAngle;
+                  return _buildButton(iconAngle,
+                      color: index.buttonColor,
+                      icon: index.icon,
+                      onPress: index.onPress);
+                }),
+                // secondary button animation
+                Transform.scale(
+                  scale: scale.value - (centerSizeOfButton * 2 - 0.25),
+                  child: FloatingActionButton(
+                      child: Icon(FontAwesomeIcons.timesCircle),
+                      onPressed: close,
+                      backgroundColor: Colors.red),
+                ),
+                // primary button animation
+                Transform.scale(
+                  scale: scale.value,
+                  child: FloatingActionButton(
+                    child: Icon(FontAwesomeIcons.solidDotCircle),
+                    onPressed: open,
+                    backgroundColor: Colors.indigo,
+                  ),
+                )
+              ]));
         });
   }
 
+  // will show child buttons
   void open() {
     controller.forward();
   }
 
+  // will hide child buttons
   void close() {
     controller.reverse();
   }
 
-
-  Widget _buildButton(double angle, {Function? onPress, Color? color, Icon? icon }) {
+  // build custom child buttons
+  Widget _buildButton(double angle,
+      {Function? onPress, Color? color, Icon? icon}) {
     final double rad = radians(angle);
     return Transform(
-        transform: Matrix4.identity()..translate(
-            (translation.value) * cos(rad),
-            (translation.value) * sin(rad)
-        ),
-
+        transform: Matrix4.identity()
+          ..translate(
+              (translation.value) * cos(rad), (translation.value) * sin(rad)),
         child: FloatingActionButton(
-            child: icon, backgroundColor: color, onPressed: (){
-          onPress!();
-          close();
-        }, elevation: 0)
-    );
+            child: icon,
+            backgroundColor: color,
+            onPressed: () {
+              onPress!();
+              close();
+            },
+            elevation: 0));
   }
 }
 
-class RadialButton{
-
+class RadialButton {
+  // background colour of the button surrounding the icon
   final Color buttonColor;
+
+  // sets icon of the child buttons
   final Icon icon;
+
+  // onPress function of the child buttons
   final Function onPress;
 
-  RadialButton({this.buttonColor=Colors.orange,required this.icon,required this.onPress});
+  // constructor for child buttons
+  RadialButton(
+      {this.buttonColor = Colors.orange,
+      required this.icon,
+      required this.onPress});
 }

@@ -6,9 +6,9 @@ A new Flutter package.
 
 ## Installation
 
-![example](https://github.com/sonykurian96/animated-radial-menu/blob/master/example/lib/main.dart)
+[example](https://github.com/sonykurian96/animated-radial-menu/blob/master/example/lib/main.dart)
 
-To use this package : add the dependency to your [pubspec.yaml] file
+To use this package : add the dependency to your pubspec.yaml file
 
 ```yaml
    dependencies:

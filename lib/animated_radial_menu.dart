@@ -64,7 +64,7 @@ class RadialAnimation extends StatelessWidget {
         ),
 
         scale = Tween<double>(
-          begin: centerSizeOfButton*2,  // 1.5
+          begin: centerSizeOfButton*2,
           end: 0.0,
         ).animate(
           CurvedAnimation(
@@ -120,7 +120,7 @@ class RadialAnimation extends StatelessWidget {
                     ),
                     Transform.scale(
                       scale: scale.value,
-                      child: FloatingActionButton(child: Icon(FontAwesomeIcons.solidDotCircle), onPressed: open,backgroundColor: Colors.teal,),
+                      child: FloatingActionButton(child: Icon(FontAwesomeIcons.solidDotCircle), onPressed: open,backgroundColor: Colors.indigo,),
                     )
                   ])
           );
